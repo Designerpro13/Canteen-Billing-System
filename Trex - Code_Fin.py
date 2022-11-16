@@ -34,11 +34,13 @@ def update_cost():
         v=int(d.get())
         qry="update pl set FF={},lunch={},burger={},pizza={},cb={},drinks={};".format(q,r,s,t,u,v)
         cur.execute(qry)
+        con.commit()
         cur.execute('select * from pl;')
         for i in range(2):
             q=cur.fetchone()
             print(q)
-        #con.commit()
+        messagebox.showinfo('Sussecs','Items updated')
+        roo.destroy()
     roo = Tk()
     roo.geometry("400x420+0+0")
     roo.title("update")
@@ -66,25 +68,19 @@ def update_cost():
 
 def Bill_me():
     def Ref():
-        nonlocal Fries,Largefries,Burger,Filet,Subtotal,Total,Drinks,Tax,cost,Cheese_burger
+        global Fries,Largefries,Burger,Filet,Subtotal,Total,Drinks,Tax,cost,Cheese_burger
         t = date.today()
         now=datetime.now()
         x=int(str(t.month)+str(t.day)+str(now.hour)+str(now.minute)+str(now.second))
         randomRef = str(x)
         rand.set(randomRef)
-        cof = Fries.get()
-        colfries= Largefries.get()
-        cob= Burger.get()
-        cofi= Filet.get()
-        cochee= Cheese_burger.get()
-        codr= Drinks.get()
-        print(cof)
-        print(colfries)
-        print(cob)
-        print(cofi)
-        print(cochee)
-        print(codr)
-        
+        cof = int(Fries)
+        colfries= int(Largefries.get())
+        cob= int(Burger.get())
+        cofi= int(Filet.get())
+        cochee= int(Cheese_burger.get())
+        codr= int(Drinks.get())
+               
         if  not cof.isnumeric():
             cof=0.0
         else:
@@ -166,8 +162,8 @@ def Bill_me():
         for i in result:
             for j in i:
                 pass
-        return(j)
-    '''
+        return(j)'''
+    
     
     
     def qexit():
@@ -366,12 +362,9 @@ def Bill_me():
     
     btnexit=Button(f1,padx=16,pady=8, bd=10 ,fg="black",font=('ariel' ,16,'bold'),width=10, text="EXIT", bg="red",command=qexit)
     btnexit.grid(row=8, column=3)
-    '''
-    btnupdate=Button(f1,padx=16,pady=8, bd=10 ,fg="black",font=('ariel' ,16,'bold'),width=8,text="update",bg="aqua",command=update)
-    btnupdate.grid(row=0, column=3)'''
+
     
-    btnTotbill=Button(f1,padx=16,pady=8, bd=10 ,fg="black",font=('ariel' ,16,'bold'),width=8,text="Totbill",bg="aqua",command=Ref)
-    btnTotbill.grid(row=0, column=2)
+  
     root.mainloop()
 #_________NAvigation console_________
 def main_page():
@@ -450,7 +443,7 @@ def bye():
     r.destroy()
     
 
-r = Toplevel()
+r = Tk()
 r.geometry("300x300")
 r.title("Canteen Login Page")
 r['bg']='pink'
