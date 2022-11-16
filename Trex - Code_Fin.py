@@ -68,19 +68,29 @@ def update_cost():
 
 def Bill_me():
     def Ref():
-        global Fries,Largefries,Burger,Filet,Subtotal,Total,Drinks,Tax,cost,Cheese_burger
+        cof =float(Fries.get())
+        colfries= float(Largefries.get())
+        cob= float(Burger.get())
+        cofi= float(Filet.get())
+        cochee= float(Cheese_burger.get())
+        codr= float(Drinks.get())
         t = date.today()
         now=datetime.now()
         x=int(str(t.month)+str(t.day)+str(now.hour)+str(now.minute)+str(now.second))
-        randomRef = str(x)
-        rand.set(randomRef)
-        cof = int(Fries)
-        colfries= int(Largefries.get())
-        cob= int(Burger.get())
-        cofi= int(Filet.get())
-        cochee= int(Cheese_burger.get())
-        codr= int(Drinks.get())
-               
+        costoffries = cof*25
+        costoflargefries = colfries*40
+        costofburger = cob*35
+        costoffilet = cofi*50
+        costofcheeseburger = cochee*30
+        costofdrinks = codr*35
+        
+        costofmeal = "₹",str('%.2f'% (costoffries +  costoflargefries + costofburger + costoffilet + costofcheeseburger + costofdrinks))
+        PayTax=((costoffries +  costoflargefries + costofburger + costoffilet +  costofcheeseburger + costofdrinks)*0.01)
+        Totalcost=(costoffries +  costoflargefries + costofburger + costoffilet  + costofcheeseburger + costofdrinks)
+        OverAllCost="₹",str( PayTax + Totalcost )
+        PaidTax="₹",str('%.2f'% PayTax)
+        
+                   
         if  not cof.isnumeric():
             cof=0.0
         else:
@@ -114,13 +124,6 @@ def Bill_me():
         costofcheeseburger = cochee*30
         costofdrinks= codr*35
         
-        print(costoffries)
-        print(costoflargefries)
-        print(costofburger)
-        print(costoffilet)
-        print(costofcheeseburger)
-        print(costofdrinks)
-    
         costofmeal = "₹",str('%.2f'% (costoffries +  costoflargefries + costofburger + costoffilet + costofcheeseburger + costofdrinks))
         PayTax=((costoffries +  costoflargefries + costofburger + costoffilet +  costofcheeseburger + costofdrinks)*0.01)
         
@@ -134,16 +137,21 @@ def Bill_me():
         Tax.set(PaidTax)
         Subtotal.set(costofmeal)
         Total.set(OverAllCost)
+        cost.set(costofmeal)
+        Tax.set(PaidTax)
+        Subtotal.set(costofmeal)
+        Total.set(OverAllCost)
         MsgBox = messagebox.askquestion ('Paid or not ','Got Paid',icon = 'warning')
         if MsgBox == 'yes':
             today = date.today()
-            if Totalcost>0:
-                a='insert into bill values({},"{}","{}")'.format(x,math.ceil(Totalcost+PayTax),today)
-                cur.execute(a)
-                con.commit()  
-            else:
-                m='Please \n Enter minimum 1 Quantity'
-                messagebox.showinfo('Warning',m)
+        if Totalcost>0:
+            a='insert into bill values({},"{}","{}")'.format(x,math.ceil(Totalcost+PayTax),today)
+            cur.execute(a)
+            con.commit()  
+        else:
+            m='Please \n Enter minimum 1 Quantity'
+            messagebox.showinfo('Warning',m)
+    
         
     '''    IDK THE STRUCTURE OF TABLE - BILL - WHICH HAS NEVER BEEN CREATED
     def call():
@@ -294,12 +302,7 @@ def Bill_me():
     lblreference = Label(f1, font=( 'aria' ,16, 'bold' ),text="Order No.",fg="brown",bd=20,anchor='w')
     lblreference.grid(row=0,column=0)
     txtreference = Entry(f1,font=('ariel' ,16,'bold'), textvariable=rand , bd=6,insertwidth=6,bg="yellow" ,justify='right')
-    
     txtreference.grid(row=0,column=1)
-    lblDrinks = Label(f1, font=( 'aria' ,16, 'bold' ),text="Drinks",fg="blue",bd=10,anchor='w')
-    lblDrinks.grid(row=1,column=0)
-    txtDrinks = Entry(f1,font=('ariel' ,16,'bold'), textvariable=Drinks , bd=6,insertwidth=4,bg="green" ,justify='right')
-    txtDrinks.grid(row=1,column=1)
     
     lblfries = Label(f1, font=( 'aria' ,16, 'bold' ),text=" French Fries ",fg="blue",bd=10,anchor='w')
     lblfries.grid(row=2,column=0)
@@ -328,13 +331,18 @@ def Bill_me():
     txtCheese_burger.grid(row=6,column=1)
     
     #--------------------------------------------------------------------------------------
-    
+    lblDrinks = Label(f1, font=( 'aria' ,16, 'bold' ),text="Drinks",fg="blue",bd=10,anchor='w')
+    lblDrinks.grid(row=1,column=0)
+    txtDrinks = Entry(f1,font=('ariel' ,16,'bold'), textvariable=Drinks , bd=6,insertwidth=4,bg="green" ,justify='right')
+    txtDrinks.grid(row=1,column=1)
     
     lblcost = Label(f1, font=( 'aria' ,16, 'bold' ),text="Cost",fg="black",bd=10,anchor='w')
     lblcost.grid(row=2,column=2)
     txtcost = Entry(f1,font=('ariel' ,16,'bold'), textvariable=cost , bd=6,insertwidth=4,bg="white" ,justify='right')
     txtcost.grid(row=2,column=3)
-        
+    
+    
+    
     lblTax = Label(f1, font=( 'aria' ,16, 'bold' ),text="Tax",fg="black",bd=10,anchor='w')
     lblTax.grid(row=3,column=2)
     txtTax = Entry(f1,font=('ariel' ,16,'bold'), textvariable=Tax , bd=6,insertwidth=4,bg="white" ,justify='right')
@@ -353,8 +361,8 @@ def Bill_me():
     #-----------------------------------------buttons------------------------------------------
     lblTotal = Label(f1,text="---------------------",fg="black")
     lblTotal.grid(row=7,columnspan=3)
-       
-    btnTotal=Button(f1,padx=16,pady=8, bd=10 ,fg="black",font=('ariel' ,16,'bold'),width=10, text="Total", bg="red",command=Ref)
+    
+    btnTotal=Button(f1,padx=16,pady=8, bd=10 ,fg="black",font=('ariel' ,16,'bold'),width=10, text="TOTAL", bg="red",command=Ref)
     btnTotal.grid(row=8, column=1)
     
     btnreset=Button(f1,padx=16,pady=8, bd=10 ,fg="black",font=('ariel' ,16,'bold'),width=10, text="RESET", bg="red",command=reset)
@@ -362,9 +370,6 @@ def Bill_me():
     
     btnexit=Button(f1,padx=16,pady=8, bd=10 ,fg="black",font=('ariel' ,16,'bold'),width=10, text="EXIT", bg="red",command=qexit)
     btnexit.grid(row=8, column=3)
-
-    
-  
     root.mainloop()
 #_________NAvigation console_________
 def main_page():
